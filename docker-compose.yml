@@ -1,0 +1,21 @@
+version: '1'
+
+services:
+  jdk:
+    
+
+  db:
+    image: mdillon/postgis:9.6
+    ports:
+      - 5432:8263
+    environment:
+      POSTGRES_DB: chat_server
+      POSTGRES_USER: alex
+      POSTGRES_PASSWORD: big_secret
+    volumes:
+      - db:/var/lib/postgresql/data
+
+
+volumes:
+  db:
+    driver: local
