@@ -1,20 +1,24 @@
-version: '1'
+version: '2'
 
 services:
-  jdk:
-    
-
+  chat_server:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+    depends_on:
+      - db
   db:
     image: mdillon/postgis:9.6
     ports:
-      - 5432:8263
+      - 5432:5432
     environment:
       POSTGRES_DB: chat_server
       POSTGRES_USER: alex
       POSTGRES_PASSWORD: big_secret
     volumes:
       - db:/var/lib/postgresql/data
-
 
 volumes:
   db:

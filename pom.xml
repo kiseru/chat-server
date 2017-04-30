@@ -9,26 +9,32 @@
     <packaging>jar</packaging>
     <version>1.0</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.4.1212.jre7</version>
+        </dependency>
+    </dependencies>
+
     <build>
+        <finalName>chat_server</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.1</version>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.0.2</version>
+                    <artifactId>maven-assembly-plugin</artifactId>
                     <configuration>
-                        <finalName>chat_server</finalName>
                         <archive>
                             <manifest>
                                 <mainClass>com.alex.chatserver.AppInitializer</mainClass>
                             </manifest>
                         </archive>
+                        <descriptorRefs>
+                            <descriptorRef>
+                                jar-with-dependencies
+                            </descriptorRef>
+                        </descriptorRefs>
                     </configuration>
                 </plugin>
             </plugins>
