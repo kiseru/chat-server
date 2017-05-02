@@ -18,7 +18,7 @@
     </dependencies>
 
     <build>
-        <finalName>chat_server</finalName>
+        <finalName>chat-server</finalName>
         <pluginManagement>
             <plugins>
                 <plugin>
