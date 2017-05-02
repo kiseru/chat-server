@@ -10,11 +10,11 @@ public class Queue<T> {
         queue = new LinkedList<T>();
     }
 
-    public void push(T value) {
+    public synchronized void push(T value) {
         queue.add(value);
     }
 
-    public T pop() {
+    public synchronized T pop() {
         return queue.removeFirst();
     }
 
