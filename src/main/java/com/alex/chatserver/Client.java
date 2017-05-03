@@ -47,10 +47,15 @@ public class Client extends Thread {
                     System.out.println(message);
 
                     // Remove this client from messagesSender
-                    messagesSender.removeClient(this);
-
                     messagesSender.addMessage(new Message("Server", message));
 
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    messagesSender.removeClient(this);
                     break;
                 }
 
