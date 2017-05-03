@@ -8,19 +8,17 @@ import java.net.Socket;
 
 public class User extends Thread {
 
-    private static int users = 0;
-
     private String userName;
     private BufferedReader in;
     private PrintWriter out;
     private MessagesSender messagesSender;
 
     public User(Socket socket, MessagesSender messagesSender) throws IOException {
-        users++;
-        this.userName = "user" + users;
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
         this.messagesSender = messagesSender;
+
+        userName = in.readLine();
     }
 
 
