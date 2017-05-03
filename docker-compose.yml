@@ -11,8 +11,8 @@ services:
       - web
       - project
     restart: always
-    environment:      
-      VIRTUAL_HOST: chmokichat.clienddev.ru
+    environment:
+      VIRTUAL_HOST: alexchat.clienddev.ru
 
   db:
     image: mdillon/postgis:9.6
@@ -29,7 +29,7 @@ volumes:
   db:
     driver: local
 
-networks:  
+networks:
   web:
     external:
       name: web
