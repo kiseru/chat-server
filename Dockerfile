@@ -7,4 +7,4 @@ RUN mvn clean compile assembly:single
 
 EXPOSE 5003
 
-CMD java -jar target/chat_server-jar-with-dependencies.jar
+CMD java -jar target/chat-server-jar-with-dependencies.jar
