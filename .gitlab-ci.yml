@@ -1,0 +1,31 @@
+stages:
+  - build
+  - deploy
+
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+  - docker rmi $(docker images -q -f dangling=true) || echo 1
+
+docker-build:
+  stage: build
+  script:
+    - docker build -t registry.gitlab.com/atnartur/alex_chat_server/image .
+    - docker push registry.gitlab.com/atnartur/alex_chat_server/image
+  tags:
+    - docker
+    - image-builder
+  only:
+    - stable
+
+run_prod:
+  stage: deploy
+  script:
+    - docker pull registry.gitlab.com/atnartur/alex_chat_server/image
+    - docker-compose -f docker-compose.yml stop
+    - docker-compose -f docker-compose.yml rm -f
+    - docker-compose -f docker-compose.yml up -d
+  only:
+    - stable
+  tags:
+    - docker
+    - amazon1.clienddev.ru

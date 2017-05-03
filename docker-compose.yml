@@ -2,7 +2,7 @@ version: '2'
 
 services:
   chat_server:
-    build: .
+    image: registry.gitlab.com/atnartur/alex_chat_server/image
     ports:
       - "5000:5000"
     volumes:
