@@ -6,23 +6,23 @@ import java.util.List;
 public class MessagesSender extends Thread {
 
     private Queue<Message> messagesQueue;
-    private List<Client> clients;
+    private List<User> users;
 
     public MessagesSender() {
         messagesQueue = new Queue<>();
-        clients = new LinkedList<>();
+        users = new LinkedList<>();
     }
 
     public void addMessage(Message message) {
         messagesQueue.push(message);
     }
 
-    public void addClient(Client client) {
-        clients.add(client);
+    public void addUser(User user) {
+        users.add(user);
     }
 
-    public void removeClient(Client client) {
-        clients.remove(client);
+    public void removeUser(User user) {
+        users.remove(user);
     }
 
     @Override
@@ -33,7 +33,7 @@ public class MessagesSender extends Thread {
             while (!messagesQueue.isEmpty()) {
                 this.setPriority(MAX_PRIORITY);
                 Message message = messagesQueue.pop();
-                clients.forEach(client -> client.sendMessage(message));
+                users.forEach(user -> user.sendMessage(message));
             }
 
             this.setPriority(NORM_PRIORITY);

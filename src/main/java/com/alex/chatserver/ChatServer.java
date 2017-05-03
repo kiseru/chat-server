@@ -22,20 +22,20 @@ public class ChatServer {
 
         while (true) {
 
-            // Waiting for new client
+            // Waiting for new user
             Socket socket = server.accept();
 
-            // Creating new Thread for client-server connection and run it
-            Client client = new Client(socket, messagesSender);
-            threads.execute(client);
+            // Creating new Thread for user-server connection and run it
+            User user = new User(socket, messagesSender);
+            threads.execute(user);
 
             // Information about connection
-            String userName = client.getUserName();
+            String userName = user.getUserName();
             String message = String.format("%s joined the chat", userName);
             System.out.println(message);
 
             // Add clients to messagesSender's collection
-            messagesSender.addClient(client);
+            messagesSender.addUser(user);
         }
     }
 }
