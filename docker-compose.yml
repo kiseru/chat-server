@@ -11,7 +11,7 @@ services:
       - web
       - project
     restart: always
-    environment:      
+    environment:
       VIRTUAL_HOST: alexchat.clienddev.ru
 
   db:
@@ -29,7 +29,7 @@ volumes:
   db:
     driver: local
 
-networks:  
+networks:
   web:
     external:
       name: web
