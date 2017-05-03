@@ -49,6 +49,8 @@ public class Client extends Thread {
                     // Remove this client from messagesSender
                     messagesSender.removeClient(this);
 
+                    messagesSender.addMessage(new Message("Server", message));
+
                     break;
                 }
 
