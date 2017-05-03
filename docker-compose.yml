@@ -4,7 +4,7 @@ services:
   chat_server:
     image: registry.gitlab.com/atnartur/alex_chat_server/image
     ports:
-      - 5003
+      - "5003:5003"
     depends_on:
       - db
     networks:
