@@ -12,7 +12,7 @@ services:
       - project
     restart: always
     environment:      
-      VIRTUAL_HOST: alexchat.clienddev.ru
+      VIRTUAL_HOST: chmokichat.clienddev.ru
 
   db:
     image: mdillon/postgis:9.6
