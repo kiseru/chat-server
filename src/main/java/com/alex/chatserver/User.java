@@ -1,5 +1,8 @@
 package com.alex.chatserver;
 
+import com.alex.chatserver.messagesservice.Message;
+import com.alex.chatserver.messagesservice.MessagesSender;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

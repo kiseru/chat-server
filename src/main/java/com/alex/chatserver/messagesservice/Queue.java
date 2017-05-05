@@ -1,4 +1,4 @@
-package com.alex.chatserver;
+package com.alex.chatserver.messagesservice;
 
 import java.util.LinkedList;
 

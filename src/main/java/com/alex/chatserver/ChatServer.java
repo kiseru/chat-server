@@ -1,5 +1,7 @@
 package com.alex.chatserver;
 
+import com.alex.chatserver.messagesservice.MessagesSender;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
