@@ -14,8 +14,6 @@ public class ChatServer {
 
     public static void run() throws SQLException, IOException, InterruptedException {
 
-        threads.execute(messagesSender);
-
         ServerSocket server = new ServerSocket(5003);
 
         System.out.println("Server is up!");

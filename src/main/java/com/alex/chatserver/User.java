@@ -47,12 +47,6 @@ public class User extends Thread {
                     // Remove this client from messagesSender
                     messagesSender.addMessage(new Message("Server", message));
 
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
                     messagesSender.removeUser(this);
                     break;
                 }
