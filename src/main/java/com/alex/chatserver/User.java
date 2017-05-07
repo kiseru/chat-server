@@ -41,11 +41,11 @@ public class User extends Thread {
             while ((input = in.readLine()) != null) {
 
                 // Если пользователь пишет exit, то отключаем его от сервера
-                if (input.equalsIgnoreCase("exit")) {
+                if (input.equalsIgnoreCase("disconnect exit car movie guards")) {
 
                     // Выводим информацию о том, что пользователь покинул группу
-                    String message = String.format("%s leave the chat", userName);
-                    group.sendMessage(new Message("Server", message));
+                    String message = String.format("%s покинул чат", userName);
+                    group.sendMessage(new Message(message));
 
                     // Удаляем его из списка участников группы
                     group.removeUser(this);

@@ -14,7 +14,7 @@ public class ChatServer {
         // Устанавливаем порт для получения сообщений
         ServerSocket server = new ServerSocket(5003);
 
-        System.out.println("Server is up!");
+        System.out.println("Сервер запущен!");
 
         while (true) {
 
@@ -42,7 +42,7 @@ public class ChatServer {
             GROUPS.add(group);
 
             // Выводим сообщение на сервер о создании группы
-            String message = String.format("Group %s created.", group.getName());
+            String message = String.format("Группа %s создана.", group.getName());
             System.out.println(message);
 
             return group;
