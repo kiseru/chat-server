@@ -1,7 +1,6 @@
 package com.alex.chatserver;
 
 import com.alex.chatserver.messagesservice.Message;
-import com.alex.chatserver.messagesservice.MessagesSender;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,16 +11,18 @@ import java.net.Socket;
 public class User extends Thread {
 
     private String userName;
+    private Group group;
     private BufferedReader in;
     private PrintWriter out;
-    private MessagesSender messagesSender;
 
-    public User(Socket socket, MessagesSender messagesSender) throws IOException {
+    public User(Socket socket) throws IOException {
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
-        this.messagesSender = messagesSender;
 
         userName = in.readLine();
+        group = ChatServer.getGroup(in.readLine());
+        group.addUser(this);
+        this.start();
     }
 
 
@@ -37,26 +38,23 @@ public class User extends Thread {
     public void run() {
         String input;
         try {
-            // Read and write to the server console
             while ((input = in.readLine()) != null) {
 
-                // Exit condition from chat
+                // Если пользователь пишет exit, то отключаем его от сервера
                 if (input.equalsIgnoreCase("exit")) {
 
-                    // Print leaving information
+                    // Выводим информацию о том, что пользователь покинул группу
                     String message = String.format("%s leave the chat", userName);
-                    System.out.println(message);
+                    group.sendMessage(new Message("Server", message));
 
-                    // Remove this client from messagesSender
-                    messagesSender.addMessage(new Message("Server", message));
-
-                    messagesSender.removeUser(this);
+                    // Удаляем его из списка участников группы
+                    group.removeUser(this);
                     break;
                 }
 
-                // Getting message and send it to our queue for next resending to other users
+                // Отправляем сообщение пользователям группы
                 Message newMessage = new Message(userName, input);
-                messagesSender.addMessage(newMessage);
+                group.sendMessage(newMessage);
             }
 
         } catch (IOException e) {

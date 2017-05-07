@@ -7,8 +7,8 @@ import java.util.List;
 
 public class MessagesSender {
 
-    private Queue<Message> messagesQueue;
-    private List<User> users;
+    private final Queue<Message> messagesQueue;
+    private final List<User> users;
 
     public MessagesSender() {
         messagesQueue = new Queue<>();
@@ -16,10 +16,13 @@ public class MessagesSender {
     }
 
     public void addMessage(Message message) {
+
+        // При отправке сообщения добавляем его в очередь для отправки и запускаем рассыльщик
         messagesQueue.push(message);
         this.run();
     }
 
+    // Добавляем пользователя в список рассыльщика
     public void addUser(User user) {
         users.add(user);
     }
@@ -28,9 +31,9 @@ public class MessagesSender {
         users.remove(user);
     }
 
-    public void run() {
+    private void run() {
 
-        // If we have a message for resending resend it
+        // Запускаем наш рассыльщик
         while (!messagesQueue.isEmpty()) {
             Message message = messagesQueue.pop();
             users.forEach(user -> user.sendMessage(message));

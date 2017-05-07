@@ -2,8 +2,12 @@ package com.alex.chatserver.messagesservice;
 
 public class Message {
 
-    private String from;
-    private String message;
+    private final String from;
+    private final String message;
+
+    public Message(String message) {
+        this("Сервер", message);
+    }
 
     public Message(String from, String message) {
 
