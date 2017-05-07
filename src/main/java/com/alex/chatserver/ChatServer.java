@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 public class ChatServer {
 
-    private final static LinkedList<Group> GROUPS = new LinkedList<>();
+    public final static LinkedList<Group> GROUPS = new LinkedList<>();
 
     public static void run() throws IOException {
 
@@ -46,6 +46,15 @@ public class ChatServer {
             System.out.println(message);
 
             return group;
+        }
+    }
+
+    public static void removeUser(Group group) {
+        if (GROUPS.get(GROUPS.indexOf(group)).isEmpty()) {
+            GROUPS.remove(group);
+
+            String message = String.format("Группа %s удалена.", group.getName());
+            System.out.println(message);
         }
     }
 }

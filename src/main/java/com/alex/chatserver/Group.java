@@ -33,6 +33,11 @@ public class Group {
 
     public void removeUser(User user) {
         sender.removeUser(user);
+        ChatServer.removeUser(this);
+    }
+
+    public boolean isEmpty() {
+        return sender.isEmpty();
     }
 
     public String getName() {
