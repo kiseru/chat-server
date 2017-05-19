@@ -14,6 +14,7 @@ public class ChatServer {
         // Устанавливаем порт для получения сообщений
         ServerSocket server = new ServerSocket(5003);
 
+        // Выводим сообщение о том, что сервер начал работу
         System.out.println("Сервер запущен!");
 
         while (true) {
@@ -39,6 +40,7 @@ public class ChatServer {
                     .findFirst().get();
         } else {
             Group group = new Group(groupName);
+
             GROUPS.add(group);
 
             // Выводим сообщение на сервер о создании группы
