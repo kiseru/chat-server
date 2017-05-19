@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 public class AppInitializer {
 
-    public static void main(String[] args) throws InterruptedException, SQLException, IOException {
+    public static void main(String[] args) throws InterruptedException, IOException {
         ChatServer.run();
     }
 }
