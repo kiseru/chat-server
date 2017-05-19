@@ -5,32 +5,6 @@ services:
     image: registry.gitlab.com/atnartur/alex_chat_server/image
     ports:
       - "5003:5003"
-    depends_on:
-      - db
-    networks:
-      - web
-      - project
     restart: always
     environment:
       VIRTUAL_HOST: alexischat.clienddev.ru
-
-  db:
-    image: mdillon/postgis:9.6
-    environment:
-      POSTGRES_DB: chat_server
-      POSTGRES_USER: alex
-      POSTGRES_PASSWORD: big_secret
-    volumes:
-      - db:/var/lib/postgresql/data
-    networks:
-      - project
-
-volumes:
-  db:
-    driver: local
-
-networks:
-  web:
-    external:
-      name: web
-  project:
