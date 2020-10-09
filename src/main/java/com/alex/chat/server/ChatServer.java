@@ -1,5 +1,7 @@
 package com.alex.chat.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -7,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChatServer {
+    private static final Logger logger = LoggerFactory.getLogger(ChatServer.class);
+
     private static ChatServer INSTANCE;
 
     private final Map<String, Group> groups = new HashMap<>();
@@ -23,19 +27,10 @@ public class ChatServer {
     }
 
     public void run() throws IOException {
-
-        // Устанавливаем порт для получения сообщений
         ServerSocket server = new ServerSocket(5003);
-
-        // Выводим сообщение о том, что сервер начал работу
-        System.out.println("Сервер запущен!");
-
+        logger.info("Сервер запущен");
         while (true) {
-
-            // Ждем новое подключение
             Socket socket = server.accept();
-
-            // Создаем пользователя
             User user = new User(socket);
         }
     }
@@ -51,14 +46,12 @@ public class ChatServer {
         }
 
         groups.remove(group.getName());
-        String message = String.format("Группа %s удалена.", group.getName());
-        System.out.println(message);
+        logger.info("Группа {} удалена", group.getName());
     }
 
     private Group createGroup(String groupName) {
         Group group = new Group(groupName);
-        String message = String.format("Группа %s создана.", group.getName());
-        System.out.println(message);
+        logger.info("Группа {} создана", group.getName());
         return group;
     }
 }

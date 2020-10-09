@@ -17,7 +17,6 @@ public class Message {
 
     @Override
     public String toString() {
-        // return a message format (userName::message)
         return String.format("%s::%s", this.from, this.message);
     }
 }

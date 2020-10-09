@@ -35,8 +35,4 @@ public class MessagesSender {
             users.forEach(user -> user.sendMessage(message));
         }
     }
-
-    public boolean isEmpty() {
-        return users.isEmpty();
-    }
 }

@@ -9,11 +9,13 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class User extends Thread {
+    private final String userName;
 
-    private String userName;
-    private Group group;
-    private BufferedReader in;
-    private PrintWriter out;
+    private final Group group;
+
+    private final BufferedReader in;
+
+    private final PrintWriter out;
 
     public User(Socket socket) throws IOException {
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -39,20 +41,13 @@ public class User extends Thread {
         String input;
         try {
             while ((input = in.readLine()) != null) {
-
-                // Если пользователь пишет exit, то отключаем его от сервера
                 if (input.equalsIgnoreCase("disconnect exit car movie guards")) {
-
-                    // Выводим информацию о том, что пользователь покинул группу
                     String message = String.format("%s покинул чат", userName);
                     group.sendMessage(new Message(message));
-
-                    // Удаляем его из списка участников группы
                     group.removeUser(this);
                     break;
                 }
 
-                // Отправляем сообщение пользователям группы
                 Message newMessage = new Message(userName, input);
                 group.sendMessage(newMessage);
             }
