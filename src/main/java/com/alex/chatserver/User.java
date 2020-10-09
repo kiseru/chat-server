@@ -20,7 +20,7 @@ public class User extends Thread {
         out = new PrintWriter(socket.getOutputStream(), true);
 
         userName = in.readLine();
-        group = ChatServer.getGroup(in.readLine());
+        group = ChatServer.getInstance().getGroup(in.readLine());
         group.addUser(this);
         this.start();
     }

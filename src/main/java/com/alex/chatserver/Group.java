@@ -3,8 +3,6 @@ package com.alex.chatserver;
 import com.alex.chatserver.messagesservice.Message;
 import com.alex.chatserver.messagesservice.MessagesSender;
 
-import java.io.IOException;
-
 public class Group {
 
     // Отправщик сообщений для этой группы
@@ -17,7 +15,7 @@ public class Group {
     }
 
     // Добавляем пользователя в группу
-    public void addUser(User user) throws IOException {
+    public void addUser(User user) {
 
         // Добавляем в список пользователей для отправки клиенту сообщений других пользователей
         sender.addUser(user);
@@ -33,7 +31,7 @@ public class Group {
 
     public void removeUser(User user) {
         sender.removeUser(user);
-        ChatServer.removeUser(this);
+        ChatServer.getInstance().removeUser(this);
     }
 
     public boolean isEmpty() {
