@@ -4,25 +4,23 @@ import com.alex.chat.server.User;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class MessagesSender {
-
     private final Queue<Message> messagesQueue;
+
     private final List<User> users;
 
     public MessagesSender() {
-        messagesQueue = new Queue<>();
+        messagesQueue = new LinkedList<>();
         users = new LinkedList<>();
     }
 
     public void addMessage(Message message) {
-
-        // При отправке сообщения добавляем его в очередь для отправки и запускаем рассыльщик
-        messagesQueue.push(message);
+        messagesQueue.add(message);
         this.run();
     }
 
-    // Добавляем пользователя в список рассыльщика
     public void addUser(User user) {
         users.add(user);
     }
@@ -32,10 +30,8 @@ public class MessagesSender {
     }
 
     private void run() {
-
-        // Запускаем наш рассыльщик
         while (!messagesQueue.isEmpty()) {
-            Message message = messagesQueue.pop();
+            Message message = messagesQueue.poll();
             users.forEach(user -> user.sendMessage(message));
         }
     }

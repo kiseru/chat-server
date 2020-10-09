@@ -17,5 +17,5 @@ java {
 }
 
 application {
-    mainClass.set("com.alex.chatserver.AppInitializer")
+    mainClass.set("com.alex.chat.server.AppInitializer")
 }
