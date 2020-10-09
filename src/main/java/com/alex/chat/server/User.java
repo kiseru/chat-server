@@ -1,6 +1,6 @@
-package com.alex.chatserver;
+package com.alex.chat.server;
 
-import com.alex.chatserver.messagesservice.Message;
+import com.alex.chat.server.messagesservice.Message;
 
 import java.io.BufferedReader;
 import java.io.IOException;

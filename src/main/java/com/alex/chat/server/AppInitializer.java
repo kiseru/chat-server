@@ -1,4 +1,4 @@
-package com.alex.chatserver;
+package com.alex.chat.server;
 
 import java.io.IOException;
 

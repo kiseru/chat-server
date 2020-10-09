@@ -1,4 +1,4 @@
-package com.alex.chatserver.messagesservice;
+package com.alex.chat.server.messagesservice;
 
 import java.util.LinkedList;
 
@@ -7,7 +7,7 @@ public class Queue<T> {
     private final LinkedList<T> queue;
 
     public Queue() {
-        queue = new LinkedList<T>();
+        queue = new LinkedList<>();
     }
 
     public synchronized void push(T value) {

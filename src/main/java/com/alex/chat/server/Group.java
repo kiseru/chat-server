@@ -1,7 +1,7 @@
-package com.alex.chatserver;
+package com.alex.chat.server;
 
-import com.alex.chatserver.messagesservice.Message;
-import com.alex.chatserver.messagesservice.MessagesSender;
+import com.alex.chat.server.messagesservice.Message;
+import com.alex.chat.server.messagesservice.MessagesSender;
 
 public class Group {
 
