@@ -1,7 +1,6 @@
-package com.alex.chat.server;
+package com.alex.chat.server.models;
 
-import com.alex.chat.server.messagesservice.Message;
-
+import com.alex.chat.server.ChatServer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

@@ -1,4 +1,4 @@
-package com.alex.chat.server.messagesservice;
+package com.alex.chat.server.models;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

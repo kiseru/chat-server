@@ -1,6 +1,6 @@
-package com.alex.chat.server;
+package com.alex.chat.server.models;
 
-import com.alex.chat.server.messagesservice.Message;
+import com.alex.chat.server.ChatServer;
 import com.alex.chat.server.messagesservice.MessagesSender;
 
 public class Group {

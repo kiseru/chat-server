@@ -1,4 +1,4 @@
-package com.alex.chat.server.messagesservice;
+package com.alex.chat.server.models;
 
 public class Message {
 

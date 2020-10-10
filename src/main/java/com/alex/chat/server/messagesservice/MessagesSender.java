@@ -1,6 +1,7 @@
 package com.alex.chat.server.messagesservice;
 
-import com.alex.chat.server.User;
+import com.alex.chat.server.models.User;
+import com.alex.chat.server.models.Message;
 
 import java.util.LinkedList;
 import java.util.List;
