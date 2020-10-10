@@ -34,6 +34,8 @@ public class ChatServer {
         while (true) {
             Socket socket = server.accept();
             User user = new User(socket);
+            Thread thread = new Thread(user);
+            thread.start();
         }
     }
 

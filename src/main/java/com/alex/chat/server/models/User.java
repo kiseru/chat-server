@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class User extends Thread {
+public class User implements Runnable {
     private final String userName;
 
     private final Group group;
@@ -23,7 +23,6 @@ public class User extends Thread {
         userName = in.readLine();
         group = ChatServer.getInstance().getGroup(in.readLine());
         group.addUser(this);
-        this.start();
     }
 
 
