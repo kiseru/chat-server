@@ -1,57 +1,50 @@
 package com.alex.chat.server.models;
 
-import com.alex.chat.server.ChatServer;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import java.util.LinkedList;
+import java.util.Objects;
+import java.util.Queue;
 
-public class User implements Runnable {
-    private final String userName;
+@RequiredArgsConstructor
+public class User {
+    @Getter
+    private final String name;
 
+    @Getter
     private final Group group;
 
-    private final BufferedReader in;
+    private final Queue<Message> messageQueue = new LinkedList<>();
 
-    private final PrintWriter out;
-
-    public User(Socket socket) throws IOException {
-        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        out = new PrintWriter(socket.getOutputStream(), true);
-
-        userName = in.readLine();
-        group = ChatServer.getInstance().getGroup(in.readLine());
-        group.addUser(this);
-    }
-
-
-    public String getUserName() {
-        return userName;
-    }
-
+    /**
+     * Добавляет сообщение в очередь для дальнейшей отправки
+     *
+     * @param message отправляемое сообщение
+     * @throws NullPointerException если {@code message} является {@code null}
+     */
     public void sendMessage(Message message) {
-        out.println(message);
+        Objects.requireNonNull(message);
+        messageQueue.add(message);
+        synchronized (this) {
+            notifyAll();
+        }
     }
 
-    @Override
-    public void run() {
-        String input;
-        try {
-            while ((input = in.readLine()) != null) {
-                if (input.equalsIgnoreCase("disconnect exit car movie guards")) {
-                    String message = String.format("%s покинул чат", userName);
-                    group.sendMessage(new Message(message));
-                    group.removeUser(this);
-                    break;
-                }
+    /**
+     * Достает из очереди следующее для отправки сообщение
+     *
+     * @return следующее сообщение
+     */
+    public Message pollMessage() {
+        return messageQueue.poll();
+    }
 
-                Message newMessage = new Message(userName, input);
-                group.sendMessage(newMessage);
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    /**
+     * Возвращает {@code true} если очередь пуста, иначе {@code false}
+     *
+     * @return {@code true} если очереди пуста, иначе {@code false}
+     */
+    public boolean isMessageQueueEmpty() {
+        return messageQueue.isEmpty();
     }
 }

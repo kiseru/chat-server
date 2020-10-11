@@ -1,34 +1,56 @@
 package com.alex.chat.server.models;
 
-import com.alex.chat.server.ChatServer;
-import com.alex.chat.server.messagesservice.MessagesSender;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
+@RequiredArgsConstructor
 public class Group {
-    private final MessagesSender sender;
+    private static final Logger logger = LoggerFactory.getLogger(Group.class);
 
+    @Getter
     private final String name;
 
-    public Group(String name) {
-        this.name = name;
-        this.sender = new MessagesSender();
-    }
+    private final Set<User> users = new HashSet<>();
 
+    /**
+     * Добавляет пользователя в группу
+     *
+     * @param user добавляемый в группу пользователь
+     * @throws NullPointerException если {@code user} является {@code null}
+     */
     public void addUser(User user) {
-        sender.addUser(user);
-        String message = String.format("%s добавился в группу.", user.getUserName());
-        this.sendMessage(new Message(message));
+        Objects.requireNonNull(user);
+        users.add(user);
+        String messageText = String.format("%s добавился в группу", user.getName());
+        sendMessageFromServer(messageText);
+        logger.info("{} {}", messageText, name);
     }
 
+    /**
+     * Кладет каждому пользователю группы сообщение от имени сервера в очередь
+     *
+     * @param messageText текст отправляемого сообщения
+     * @throws NullPointerException если {@code messageText} является {@code null}
+     */
+    public void sendMessageFromServer(String messageText) {
+        Objects.requireNonNull(messageText);
+        Message message = new Message(messageText);
+        sendMessage(message);
+    }
+
+    /**
+     * Кладет каждому пользователю группы сообщение в очередь
+     *
+     * @param message отправляемое сообщение
+     * @throws NullPointerException если {@code message} является {@code null}
+     */
     public void sendMessage(Message message) {
-        sender.addMessage(message);
-    }
-
-    public void removeUser(User user) {
-        sender.removeUser(user);
-        ChatServer.getInstance().removeUser(this);
-    }
-
-    public String getName() {
-        return name;
+        Objects.requireNonNull(message);
+        users.forEach(user -> user.sendMessage(message));
     }
 }
