@@ -20,20 +20,14 @@ public class UserMessageSender implements Runnable {
 
     @Override
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
-            synchronized (user) {
-                while (user.isMessageQueueEmpty()) {
-                    try {
-                        user.wait();
-                    } catch (InterruptedException e) {
-                        logger.error("Поток прерван", e);
-                    }
-                }
-
+        try {
+            while (!Thread.currentThread().isInterrupted()) {
                 Message message = user.pollMessage();
                 writer.println(message);
                 writer.flush();
             }
+        } catch (InterruptedException e) {
+            logger.error("Поток прерван", e);
         }
     }
 }

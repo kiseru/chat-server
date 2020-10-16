@@ -24,9 +24,9 @@ public class User {
      */
     public void sendMessage(Message message) {
         Objects.requireNonNull(message);
-        messageQueue.add(message);
-        synchronized (this) {
-            notifyAll();
+        synchronized (messageQueue) {
+            messageQueue.add(message);
+            messageQueue.notifyAll();
         }
     }
 
@@ -35,16 +35,13 @@ public class User {
      *
      * @return следующее сообщение
      */
-    public Message pollMessage() {
-        return messageQueue.poll();
-    }
+    public Message pollMessage() throws InterruptedException {
+        synchronized (messageQueue) {
+            while (messageQueue.isEmpty()) {
+                messageQueue.wait();
+            }
 
-    /**
-     * Возвращает {@code true} если очередь пуста, иначе {@code false}
-     *
-     * @return {@code true} если очереди пуста, иначе {@code false}
-     */
-    public boolean isMessageQueueEmpty() {
-        return messageQueue.isEmpty();
+            return messageQueue.poll();
+        }
     }
 }
