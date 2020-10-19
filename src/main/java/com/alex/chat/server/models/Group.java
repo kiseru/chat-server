@@ -25,9 +25,12 @@ public class Group {
      */
     public void addUser(User user) {
         Objects.requireNonNull(user);
-        users.add(user);
-        String messageText = String.format("%s добавился в группу", user.getName());
-        sendMessageFromServer(messageText);
+        String messageText;
+        synchronized (users) {
+            users.add(user);
+            messageText = String.format("%s добавился в группу", user.getName());
+            sendMessageFromServer(messageText);
+        }
         logger.info("{} {}", messageText, name);
     }
 
