@@ -15,11 +15,15 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class ChatServer {
     private static final Logger logger = LoggerFactory.getLogger(ChatServer.class);
 
     private final Map<String, Group> groups = new HashMap<>();
+
+    private final Executor executor = Executors.newCachedThreadPool();
 
     /**
      * Запуск сервера
@@ -29,12 +33,25 @@ public class ChatServer {
         logger.info("Сервер запущен");
         while (!server.isClosed()) {
             Socket socket = server.accept();
+            executor.execute(() -> handleConnection(socket));
+        }
+    }
+
+    /**
+     * Обработка подключения пользователя
+     *
+     * @param socket - сокет, подключаемого клиента
+     */
+    private void handleConnection(Socket socket) {
+        try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter writer = new PrintWriter(socket.getOutputStream());
 
             User user = authorizeUser(reader);
             createUserMessageReceiver(reader, user);
             createUserMessageSender(writer, user);
+        } catch (IOException e) {
+            logger.error("Проблемы с подключением к клиенту");
         }
     }
 
