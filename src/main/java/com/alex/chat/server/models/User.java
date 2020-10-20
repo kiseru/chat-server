@@ -35,10 +35,14 @@ public class User {
      *
      * @return следующее сообщение
      */
-    public Message pollMessage() throws InterruptedException {
+    public Message pollMessage() {
         synchronized (messageQueue) {
-            while (messageQueue.isEmpty()) {
-                messageQueue.wait();
+            try {
+                while (messageQueue.isEmpty()) {
+                    messageQueue.wait();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
 
             return messageQueue.poll();
