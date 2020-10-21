@@ -2,16 +2,14 @@ package com.alex.chat.server.models;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @RequiredArgsConstructor
+@Slf4j
 public class Group {
-    private static final Logger logger = LoggerFactory.getLogger(Group.class);
-
     @Getter
     private final String name;
 
@@ -31,7 +29,7 @@ public class Group {
             messageText = String.format("%s добавился в группу", user.getName());
             sendMessageFromServer(messageText);
         }
-        logger.info("{} {}", messageText, name);
+        log.info("{} {}", messageText, name);
     }
 
     /**

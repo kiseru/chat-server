@@ -4,8 +4,7 @@ import com.alex.chat.server.models.Group;
 import com.alex.chat.server.models.User;
 import com.alex.chat.server.services.UserMessageReceiver;
 import com.alex.chat.server.services.UserMessageSender;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,9 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+@Slf4j
 public class ChatServer {
-    private static final Logger logger = LoggerFactory.getLogger(ChatServer.class);
-
     private final Map<String, Group> groups = new ConcurrentHashMap<>();
 
     private final Executor executor = Executors.newCachedThreadPool();
@@ -30,7 +28,7 @@ public class ChatServer {
      */
     public void run() throws IOException {
         ServerSocket server = new ServerSocket(5003);
-        logger.info("Сервер запущен");
+        log.info("Сервер запущен");
         while (!server.isClosed()) {
             Socket socket = server.accept();
             executor.execute(() -> handleConnection(socket));
@@ -51,7 +49,7 @@ public class ChatServer {
             createUserMessageReceiver(reader, user);
             createUserMessageSender(writer, user);
         } catch (IOException e) {
-            logger.error("Проблемы с подключением к клиенту");
+            log.error("Проблемы с подключением к клиенту");
         }
     }
 
@@ -105,7 +103,7 @@ public class ChatServer {
     private Group createGroup(String groupName) {
         Objects.requireNonNull(groupName);
         Group group = new Group(groupName);
-        logger.info("Группа {} создана", group.getName());
+        log.info("Группа {} создана", group.getName());
         return group;
     }
 
