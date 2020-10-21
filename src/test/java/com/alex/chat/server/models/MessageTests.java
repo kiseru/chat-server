@@ -16,7 +16,7 @@ public class MessageTests {
         Field declaredField = Message.class.getDeclaredField("from");
         declaredField.setAccessible(true);
         String from = (String) declaredField.get(message);
-        assertEquals("Сервер", from);
+        assertEquals("Server", from);
     }
 
     @Test
