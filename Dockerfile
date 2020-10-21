@@ -1,10 +1,13 @@
-FROM maven:3.5
+FROM openjdk:11
 
-COPY . src/
+ENV WORK_DIR=CharServer
 
-WORKDIR src/
-RUN mvn clean compile assembly:single
+RUN mkdir $WORK_DIR
+
+WORKDIR $WORK_DIR
+
+ADD ./build .
 
 EXPOSE 5003
 
-CMD java -jar target/chat-server-jar-with-dependencies.jar
+CMD "./install/ChatServer/bin/ChatServer"

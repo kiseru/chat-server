@@ -1,10 +1,8 @@
-version: '2'
+version: '3.8'
 
 services:
   chat_server:
-    image: registry.gitlab.com/atnartur/alex_chat_server/image
+    build: .
     ports:
       - "5003:5003"
     restart: always
-    environment:
-      VIRTUAL_HOST: alexischat.clienddev.ru
