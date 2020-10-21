@@ -29,7 +29,7 @@ java {
 }
 
 application {
-    mainClass.set("com.alex.chat.server.AppInitializer")
+    mainClass.set("com.alex.chat.server.MainKt")
 }
 
 tasks.test {
