@@ -115,8 +115,7 @@ public class ChatServer {
      */
     private void createUserMessageReceiver(BufferedReader reader, User user) {
         UserMessageReceiver receiver = new UserMessageReceiver(reader, user);
-        Thread thread = new Thread(receiver);
-        thread.start();
+        executor.execute(receiver);
     }
 
     /**
@@ -127,7 +126,6 @@ public class ChatServer {
      */
     private void createUserMessageSender(PrintWriter writer, User user) {
         UserMessageSender sender = new UserMessageSender(writer, user);
-        Thread senderThread = new Thread(sender);
-        senderThread.start();
+        executor.execute(sender);
     }
 }
