@@ -1,10 +1,12 @@
 package com.alex.chat.server;
 
+import com.alex.chat.server.factories.ReceiverFactory;
+import com.alex.chat.server.factories.SenderFactory;
 import com.alex.chat.server.models.Group;
 import com.alex.chat.server.models.User;
-import com.alex.chat.server.services.UserMessageReceiver;
-import com.alex.chat.server.services.UserMessageSender;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.inject.Inject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,6 +24,12 @@ public class ChatServer {
     private final Map<String, Group> groups = new ConcurrentHashMap<>();
 
     private final Executor executor = Executors.newCachedThreadPool();
+
+    @Inject
+    private ReceiverFactory receiverFactory;
+
+    @Inject
+    private SenderFactory senderFactory;
 
     /**
      * Запуск сервера
@@ -46,8 +54,8 @@ public class ChatServer {
             PrintWriter writer = new PrintWriter(socket.getOutputStream());
 
             User user = authorizeUser(reader);
-            createUserMessageReceiver(reader, user);
-            createUserMessageSender(writer, user);
+            executor.execute(receiverFactory.getReceiver(reader, user));
+            executor.execute(senderFactory.getSender(writer, user));
         } catch (IOException e) {
             log.error("Проблемы с подключением к клиенту");
         }
@@ -105,27 +113,5 @@ public class ChatServer {
         Group group = new Group(groupName);
         log.info("Группа {} создана", group.getName());
         return group;
-    }
-
-    /**
-     * Создает нить для чтение данных пользователя
-     *
-     * @param reader входящий поток
-     * @param user пользователь, у которого получаются данные
-     */
-    private void createUserMessageReceiver(BufferedReader reader, User user) {
-        UserMessageReceiver receiver = new UserMessageReceiver(reader, user);
-        executor.execute(receiver);
-    }
-
-    /**
-     * Создает нить для отправки данных пользователю
-     *
-     * @param writer исходящий поток
-     * @param user пользователь, которому отправляются данные
-     */
-    private void createUserMessageSender(PrintWriter writer, User user) {
-        UserMessageSender sender = new UserMessageSender(writer, user);
-        executor.execute(sender);
     }
 }
