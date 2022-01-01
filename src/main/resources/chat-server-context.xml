@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="receiverFactory"
+          class="com.alex.chat.server.factories.ReceiverFactory"/>
+
+    <bean id="senderFactory"
+          class="com.alex.chat.server.factories.SenderFactory"/>
+
+    <bean id="chatServer"
+          class="com.alex.chat.server.ChatServer">
+        <constructor-arg ref="receiverFactory"/>
+        <constructor-arg ref="senderFactory"/>
+    </bean>
+</beans>

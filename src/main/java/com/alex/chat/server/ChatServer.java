@@ -4,9 +4,9 @@ import com.alex.chat.server.factories.ReceiverFactory;
 import com.alex.chat.server.factories.SenderFactory;
 import com.alex.chat.server.models.Group;
 import com.alex.chat.server.models.User;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.inject.Inject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,17 +19,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+@RequiredArgsConstructor
 @Slf4j
 public class ChatServer {
     private final Map<String, Group> groups = new ConcurrentHashMap<>();
 
     private final Executor executor = Executors.newCachedThreadPool();
 
-    @Inject
-    private ReceiverFactory receiverFactory;
+    private final ReceiverFactory receiverFactory;
 
-    @Inject
-    private SenderFactory senderFactory;
+    private final SenderFactory senderFactory;
 
     /**
      * Запуск сервера

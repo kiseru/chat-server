@@ -9,7 +9,7 @@ repositories {
 
 dependencies {
     implementation 'org.slf4j:slf4j-simple:1.7.30'
-    implementation 'javax:javaee-api:7.0'
+    implementation 'org.springframework:spring-context:5.3.14'
     compileOnly 'org.projectlombok:lombok:1.18.14'
     annotationProcessor 'org.projectlombok:lombok:1.18.14'
 
