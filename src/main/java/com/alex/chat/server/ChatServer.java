@@ -4,6 +4,7 @@ import com.alex.chat.server.factories.ReceiverFactory;
 import com.alex.chat.server.factories.SenderFactory;
 import com.alex.chat.server.models.Group;
 import com.alex.chat.server.models.User;
+import com.alex.chat.server.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,6 +26,8 @@ public class ChatServer {
     private final Map<String, Group> groups = new ConcurrentHashMap<>();
 
     private final Executor executor = Executors.newCachedThreadPool();
+
+    private final GroupService groupService;
 
     private final ReceiverFactory receiverFactory;
 
@@ -109,7 +112,7 @@ public class ChatServer {
      */
     private Group createGroup(String groupName) {
         Objects.requireNonNull(groupName);
-        Group group = new Group(groupName);
+        Group group = groupService.create(groupName);
         log.info("Группа {} создана", group.getName());
         return group;
     }

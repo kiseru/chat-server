@@ -10,7 +10,11 @@
 
     <bean id="chatServer"
           class="com.alex.chat.server.ChatServer">
+        <constructor-arg ref="groupService"/>
         <constructor-arg ref="receiverFactory"/>
         <constructor-arg ref="senderFactory"/>
     </bean>
+
+    <bean id="groupService"
+          class="com.alex.chat.server.service.impl.GroupServiceImpl"/>
 </beans>
