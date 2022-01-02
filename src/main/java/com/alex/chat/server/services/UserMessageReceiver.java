@@ -1,9 +1,10 @@
 package com.alex.chat.server.services;
 
+import com.alex.chat.server.model.Message;
 import com.alex.chat.server.models.Group;
-import com.alex.chat.server.models.Message;
 import com.alex.chat.server.models.User;
 import lombok.RequiredArgsConstructor;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 

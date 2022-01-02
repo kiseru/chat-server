@@ -1,7 +1,8 @@
-package com.alex.chat.server.models;
+package com.alex.chat.server.model;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
 import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

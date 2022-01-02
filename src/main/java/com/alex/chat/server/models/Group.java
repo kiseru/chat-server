@@ -1,5 +1,6 @@
 package com.alex.chat.server.models;
 
+import com.alex.chat.server.model.Message;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashSet;
