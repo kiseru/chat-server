@@ -1,19 +1,20 @@
 package com.alex.chat.server.models;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@RequiredArgsConstructor
 @Slf4j
 public class Group {
-    @Getter
     private final String name;
 
     private final Set<User> users = new HashSet<>();
+
+    public Group(String name) {
+        this.name = name;
+    }
 
     /**
      * Добавляет пользователя в группу
@@ -53,5 +54,9 @@ public class Group {
     public void sendMessage(Message message) {
         Objects.requireNonNull(message);
         users.forEach(user -> user.sendMessage(message));
+    }
+
+    public String getName() {
+        return name;
     }
 }

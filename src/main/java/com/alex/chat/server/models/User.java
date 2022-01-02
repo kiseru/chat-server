@@ -1,20 +1,20 @@
 package com.alex.chat.server.models;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Queue;
 
-@RequiredArgsConstructor
 public class User {
-    @Getter
     private final String name;
 
-    @Getter
     private final Group group;
 
     private final Queue<Message> messageQueue = new LinkedList<>();
+
+    public User(String name, Group group) {
+        this.name = name;
+        this.group = group;
+    }
 
     /**
      * Добавляет сообщение в очередь для дальнейшей отправки
@@ -47,5 +47,13 @@ public class User {
 
             return messageQueue.poll();
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Group getGroup() {
+        return group;
     }
 }
