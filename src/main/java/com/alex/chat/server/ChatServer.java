@@ -15,17 +15,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 @RequiredArgsConstructor
 @Slf4j
 public class ChatServer {
-    private final Map<String, Group> groups = new ConcurrentHashMap<>();
-
     private final Executor executor = Executors.newCachedThreadPool();
 
     private final GroupService groupService;
@@ -88,35 +83,9 @@ public class ChatServer {
             throw new IOException("Не удалось получить имя группы", cause);
         }
 
-        Group group = getGroup(groupName);
+        Group group = groupService.findOrCreate(groupName);
         User user = userService.create(userName, group);
         group.addUser(user);
         return user;
-    }
-
-    /**
-     * Возвращает группу из {@code groups}.
-     * Если её там нет, то создает новую и добавляет её в {@code groups}.
-     *
-     * @param groupName название группы
-     * @return группу с переданным названием
-     * @throws NullPointerException если {@code groupName} является {@code null}
-     */
-    private Group getGroup(String groupName) {
-        Objects.requireNonNull(groupName);
-        return groups.computeIfAbsent(groupName, this::createGroup);
-    }
-
-    /**
-     * Создает группу с переданным именем
-     *
-     * @param groupName имя группы
-     * @return созданная группа
-     */
-    private Group createGroup(String groupName) {
-        Objects.requireNonNull(groupName);
-        Group group = groupService.create(groupName);
-        log.info("Группа {} создана", group.getName());
-        return group;
     }
 }
