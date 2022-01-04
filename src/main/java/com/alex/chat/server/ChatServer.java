@@ -2,10 +2,8 @@ package com.alex.chat.server;
 
 import com.alex.chat.server.factories.ReceiverFactory;
 import com.alex.chat.server.factories.SenderFactory;
-import com.alex.chat.server.models.Group;
 import com.alex.chat.server.models.User;
 import com.alex.chat.server.service.GroupService;
-import com.alex.chat.server.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,8 +26,6 @@ public class ChatServer {
     private final ReceiverFactory receiverFactory;
 
     private final SenderFactory senderFactory;
-
-    private final UserService userService;
 
     /**
      * Запуск сервера
@@ -83,9 +79,6 @@ public class ChatServer {
             throw new IOException("Не удалось получить имя группы", cause);
         }
 
-        Group group = groupService.findOrCreate(groupName);
-        User user = userService.create(userName, group);
-        group.addUser(user);
-        return user;
+        return groupService.addUserToGroup(userName, groupName);
     }
 }
