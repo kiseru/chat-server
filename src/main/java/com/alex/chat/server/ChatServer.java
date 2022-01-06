@@ -71,20 +71,26 @@ public class ChatServer {
      * @throws IOException если не удалось получить имя пользователя или название группы от клиента
      */
     private User authorizeUser(BufferedReader reader) throws IOException {
-        String userName;
-        try {
-            userName = reader.readLine();
-        } catch (IOException cause) {
-            throw new IOException("Не удалось получить имя пользователя", cause);
-        }
-
-        String groupName;
-        try {
-            groupName = reader.readLine();
-        } catch (IOException cause) {
-            throw new IOException("Не удалось получить имя группы", cause);
-        }
-
+        String userName = readUserName(reader);
+        String groupName = readGroupName(reader);
         return groupService.addUserToGroup(userName, groupName);
+    }
+
+    private String readUserName(BufferedReader reader) {
+        try {
+            return reader.readLine();
+        } catch (IOException e) {
+            log.error("Не удалось получить имя пользователя", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String readGroupName(BufferedReader reader) {
+        try {
+            return reader.readLine();
+        } catch (IOException e) {
+            log.error("Не удалось получить имя группы", e);
+            throw new RuntimeException(e);
+        }
     }
 }
