@@ -9,12 +9,10 @@
           class="com.alex.chat.server.factories.SenderFactory"/>
 
     <bean id="chatServer"
-          class="com.alex.chat.server.ChatServer"
-          autowire="constructor"/>
+          class="com.alex.chat.server.ChatServer"/>
 
     <bean id="groupService"
-          class="com.alex.chat.server.service.impl.GroupServiceImpl"
-          autowire="constructor"/>
+          class="com.alex.chat.server.service.impl.GroupServiceImpl"/>
 
     <bean id="userService"
           class="com.alex.chat.server.service.impl.UserServiceImpl"/>

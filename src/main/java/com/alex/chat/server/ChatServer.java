@@ -4,8 +4,8 @@ import com.alex.chat.server.factories.ReceiverFactory;
 import com.alex.chat.server.factories.SenderFactory;
 import com.alex.chat.server.models.User;
 import com.alex.chat.server.service.GroupService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +16,6 @@ import java.net.Socket;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-@RequiredArgsConstructor
 @Slf4j
 public class ChatServer {
     private final Executor executor = Executors.newCachedThreadPool();
@@ -26,6 +25,13 @@ public class ChatServer {
     private final ReceiverFactory receiverFactory;
 
     private final SenderFactory senderFactory;
+
+    @Autowired
+    public ChatServer(GroupService groupService, ReceiverFactory receiverFactory, SenderFactory senderFactory) {
+        this.groupService = groupService;
+        this.receiverFactory = receiverFactory;
+        this.senderFactory = senderFactory;
+    }
 
     /**
      * Запуск сервера

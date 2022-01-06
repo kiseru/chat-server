@@ -4,9 +4,10 @@ import com.alex.chat.server.models.Group
 import com.alex.chat.server.models.User
 import com.alex.chat.server.service.GroupService
 import com.alex.chat.server.service.UserService
+import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.ConcurrentHashMap
 
-class GroupServiceImpl(
+class GroupServiceImpl @Autowired constructor(
     private val userService: UserService,
 ) : GroupService {
     private val groups = ConcurrentHashMap<String, Group>()
