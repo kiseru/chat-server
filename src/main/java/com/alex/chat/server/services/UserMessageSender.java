@@ -6,11 +6,15 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.PrintWriter;
 
-@RequiredArgsConstructor
 public class UserMessageSender implements Runnable {
     private final PrintWriter writer;
 
     private final User user;
+
+    public UserMessageSender(PrintWriter writer, User user) {
+        this.writer = writer;
+        this.user = user;
+    }
 
     @Override
     public void run() {

@@ -8,11 +8,15 @@ import lombok.RequiredArgsConstructor;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-@RequiredArgsConstructor
 public class UserMessageReceiver implements Runnable {
     private final BufferedReader reader;
 
     private final User user;
+
+    public UserMessageReceiver(BufferedReader reader, User user) {
+        this.reader = reader;
+        this.user = user;
+    }
 
     @Override
     public void run() {
