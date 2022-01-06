@@ -1,9 +1,9 @@
 package com.alex.chat.server;
 
-import com.alex.chat.server.factories.ReceiverFactory;
-import com.alex.chat.server.factories.SenderFactory;
 import com.alex.chat.server.models.User;
 import com.alex.chat.server.service.GroupService;
+import com.alex.chat.server.service.ReceiverService;
+import com.alex.chat.server.service.SenderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -22,15 +22,15 @@ public class ChatServer {
 
     private final GroupService groupService;
 
-    private final ReceiverFactory receiverFactory;
+    private final ReceiverService receiverService;
 
-    private final SenderFactory senderFactory;
+    private final SenderService senderService;
 
     @Autowired
-    public ChatServer(GroupService groupService, ReceiverFactory receiverFactory, SenderFactory senderFactory) {
+    public ChatServer(GroupService groupService, ReceiverService receiverService, SenderService senderService) {
         this.groupService = groupService;
-        this.receiverFactory = receiverFactory;
-        this.senderFactory = senderFactory;
+        this.receiverService = receiverService;
+        this.senderService = senderService;
     }
 
     /**
@@ -56,8 +56,8 @@ public class ChatServer {
             PrintWriter writer = new PrintWriter(socket.getOutputStream());
 
             User user = authorizeUser(reader);
-            executor.execute(receiverFactory.getReceiver(reader, user));
-            executor.execute(senderFactory.getSender(writer, user));
+            executor.execute(receiverService.createReceiver(reader, user));
+            executor.execute(senderService.createSender(writer, user));
         } catch (IOException e) {
             log.error("Проблемы с подключением к клиенту");
         }
