@@ -6,6 +6,7 @@ import com.alex.chat.server.service.ReceiverService;
 import com.alex.chat.server.service.SenderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.net.Socket;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+@Component
 @Slf4j
 public class ChatServer {
     private final Executor executor = Executors.newCachedThreadPool();
