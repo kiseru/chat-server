@@ -1,6 +1,6 @@
 package com.alex.chat.server.model
 
-class Message(
+data class Message(
     val from: String,
     val text: String,
 ) {
