@@ -14,11 +14,6 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
-    compileOnly("org.projectlombok:lombok:1.18.14")
-    annotationProcessor("org.projectlombok:lombok:1.18.14")
-
-    testCompileOnly("org.projectlombok:lombok:1.18.14")
-    testAnnotationProcessor("org.projectlombok:lombok:1.18.14")
 }
 
 application {

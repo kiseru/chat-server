@@ -4,7 +4,8 @@ import com.alex.chat.server.models.User;
 import com.alex.chat.server.service.GroupService;
 import com.alex.chat.server.service.ReceiverService;
 import com.alex.chat.server.service.SenderService;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +19,10 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 @Component
-@Slf4j
 public class ChatServer {
+
+    private static final Logger log = LoggerFactory.getLogger(ChatServer.class);
+
     private final Executor executor = Executors.newCachedThreadPool();
 
     private final GroupService groupService;
