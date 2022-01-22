@@ -1,6 +1,6 @@
 package com.alex.chat.server.service.impl
 
-import com.alex.chat.server.models.Group
+import com.alex.chat.server.model.Group
 import com.alex.chat.server.models.User
 import com.alex.chat.server.service.GroupService
 import com.alex.chat.server.service.UserService

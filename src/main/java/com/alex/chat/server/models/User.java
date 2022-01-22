@@ -1,5 +1,6 @@
 package com.alex.chat.server.models;
 
+import com.alex.chat.server.model.Group;
 import com.alex.chat.server.model.Message;
 
 import java.util.LinkedList;
