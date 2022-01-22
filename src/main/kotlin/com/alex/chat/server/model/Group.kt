@@ -1,6 +1,5 @@
 package com.alex.chat.server.model
 
-import com.alex.chat.server.models.User
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

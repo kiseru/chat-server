@@ -1,7 +1,7 @@
 package com.alex.chat.server.services;
 
 import com.alex.chat.server.model.Message;
-import com.alex.chat.server.models.User;
+import com.alex.chat.server.model.User;
 
 import java.io.PrintWriter;
 

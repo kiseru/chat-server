@@ -2,7 +2,7 @@ package com.alex.chat.server.services;
 
 import com.alex.chat.server.model.Message;
 import com.alex.chat.server.model.Group;
-import com.alex.chat.server.models.User;
+import com.alex.chat.server.model.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
