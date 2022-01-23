@@ -9,7 +9,6 @@ repositories {
 }
 
 dependencies {
-    implementation("org.slf4j:slf4j-simple:1.7.33")
     implementation("org.springframework:spring-context:5.3.15")
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))

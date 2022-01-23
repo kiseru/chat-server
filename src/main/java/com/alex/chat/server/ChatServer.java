@@ -4,8 +4,6 @@ import com.alex.chat.server.model.User;
 import com.alex.chat.server.service.GroupService;
 import com.alex.chat.server.service.ReceiverService;
 import com.alex.chat.server.service.SenderService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +18,6 @@ import java.util.concurrent.Executors;
 
 @Component
 public class ChatServer {
-
-    private static final Logger log = LoggerFactory.getLogger(ChatServer.class);
 
     private final Executor executor = Executors.newCachedThreadPool();
 
@@ -43,7 +39,6 @@ public class ChatServer {
      */
     public void run() throws IOException {
         ServerSocket server = new ServerSocket(5003);
-        log.info("Сервер запущен");
         while (!server.isClosed()) {
             Socket socket = server.accept();
             executor.execute(() -> handleConnection(socket));
@@ -63,8 +58,7 @@ public class ChatServer {
             User user = authorizeUser(reader);
             executor.execute(receiverService.createReceiver(reader, user));
             executor.execute(senderService.createSender(writer, user));
-        } catch (IOException e) {
-            log.error("Проблемы с подключением к клиенту");
+        } catch (IOException ignored) {
         }
     }
 
@@ -85,7 +79,6 @@ public class ChatServer {
         try {
             return reader.readLine();
         } catch (IOException e) {
-            log.error("Не удалось получить имя пользователя", e);
             throw new RuntimeException(e);
         }
     }
@@ -94,7 +87,6 @@ public class ChatServer {
         try {
             return reader.readLine();
         } catch (IOException e) {
-            log.error("Не удалось получить имя группы", e);
             throw new RuntimeException(e);
         }
     }
