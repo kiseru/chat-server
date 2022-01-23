@@ -6,7 +6,7 @@ import kotlin.concurrent.withLock
 
 class User(
     private val name: String,
-    val group: Group,
+    private val group: Group,
 ) {
     private val messageQueue: Queue<Message> = LinkedList()
 
@@ -31,11 +31,14 @@ class User(
         }
     }
 
-    fun createMessage(text: String) = Message(name, text)
-
     fun logJoiningToGroup(groupName: String) {
         val text = "$name добавился в группу $groupName"
         val message = Message(text)
+        group.sendMessage(message)
+    }
+
+    fun sendMessageToGroup(text: String) {
+        val message = Message(name, text)
         group.sendMessage(message)
     }
 }

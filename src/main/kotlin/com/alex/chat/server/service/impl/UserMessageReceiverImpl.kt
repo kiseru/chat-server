@@ -11,9 +11,7 @@ class UserMessageReceiverImpl(
     override fun run() {
         while (true) {
             val input = reader.readLine() ?: break
-            val message = user.createMessage(input)
-            val group = user.group
-            group.sendMessage(message)
+            user.sendMessageToGroup(input)
         }
     }
 }
