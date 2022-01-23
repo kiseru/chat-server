@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 class User(
-    val name: String,
+    private val name: String,
     val group: Group,
 ) {
     private val messageQueue: Queue<Message> = LinkedList()
@@ -29,5 +29,13 @@ class User(
 
             return messageQueue.poll()
         }
+    }
+
+    fun createMessage(text: String) = Message(name, text)
+
+    fun logJoiningToGroup(groupName: String) {
+        val text = "$name добавился в группу $groupName"
+        val message = Message(text)
+        group.sendMessage(message)
     }
 }
