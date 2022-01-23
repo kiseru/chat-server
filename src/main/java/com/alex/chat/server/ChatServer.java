@@ -70,20 +70,12 @@ public class ChatServer {
      * @throws IOException если не удалось получить имя пользователя или название группы от клиента
      */
     private User authorizeUser(BufferedReader reader) throws IOException {
-        String userName = readUserName(reader);
-        String groupName = readGroupName(reader);
+        String userName = readLine(reader);
+        String groupName = readLine(reader);
         return groupService.addUserToGroup(userName, groupName);
     }
 
-    private String readUserName(BufferedReader reader) {
-        try {
-            return reader.readLine();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String readGroupName(BufferedReader reader) {
+    private String readLine(BufferedReader reader) {
         try {
             return reader.readLine();
         } catch (IOException e) {
