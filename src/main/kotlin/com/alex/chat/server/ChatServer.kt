@@ -4,6 +4,10 @@ import com.alex.chat.server.model.User
 import com.alex.chat.server.service.GroupService
 import com.alex.chat.server.service.ReceiverService
 import com.alex.chat.server.service.SenderService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Component
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -21,15 +25,17 @@ class ChatServer(
 
     private val executor = Executors.newCachedThreadPool()
 
-    fun run() {
+    fun run() = runBlocking(Dispatchers.IO) {
         val server = ServerSocket(5003)
         while (!server.isClosed) {
             val socket = server.accept()
-            executor.execute { handleConnection(socket) }
+            launch {
+                handleConnection(socket)
+            }
         }
     }
 
-    private fun handleConnection(socket: Socket) {
+    private suspend fun handleConnection(socket: Socket) = withContext(Dispatchers.IO) {
         val reader = BufferedReader(InputStreamReader(socket.getInputStream()))
         val writer = PrintWriter(socket.getOutputStream())
 
