@@ -14,7 +14,6 @@ dependencies {
     implementation("org.springframework:spring-context:5.3.15")
     implementation(kotlin("stdlib"))
     implementation(kotlin("reflect"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
 }
 
