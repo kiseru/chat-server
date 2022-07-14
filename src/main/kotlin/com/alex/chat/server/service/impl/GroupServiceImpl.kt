@@ -12,9 +12,10 @@ import java.util.concurrent.ConcurrentHashMap
 class GroupServiceImpl @Autowired constructor(
     private val userService: UserService,
 ) : GroupService {
+
     private val groups = ConcurrentHashMap<String, Group>()
 
-    override fun addUserToGroup(userName: String, groupName: String): User {
+    override suspend fun addUserToGroup(userName: String, groupName: String): User {
         val group = groups.computeIfAbsent(groupName) { Group(it) }
         val user = userService.create(userName, group)
         group.addUser(user)

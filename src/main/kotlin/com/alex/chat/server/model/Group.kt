@@ -1,20 +1,23 @@
 package com.alex.chat.server.model
 
-class Group(
-    private val name: String,
-) {
-    private val users = mutableSetOf<User>()
+import kotlinx.coroutines.flow.asFlow
+import java.util.concurrent.CopyOnWriteArraySet
 
-    fun addUser(user: User) {
-        synchronized(users) {
-            users.add(user)
-            user.logJoiningToGroup(name)
-        }
+class Group(
+    val name: String,
+) {
+
+    private val users = CopyOnWriteArraySet<User>()
+
+    suspend fun addUser(user: User) {
+        users.add(user)
+        user.logJoiningToGroup(name)
     }
 
-    fun sendMessage(message: Message) {
-        for (user in users) {
-            user.sendMessage(message)
-        }
+    suspend fun sendMessage(message: Message) {
+        users.asFlow()
+            .collect {
+                it.sendMessage(message)
+            }
     }
 }
