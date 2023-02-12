@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   chat_server:
-    build: .
+    build: ..
     ports:
       - "5003:5003"
     restart: always
