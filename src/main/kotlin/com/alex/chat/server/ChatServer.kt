@@ -2,14 +2,15 @@ package com.alex.chat.server
 
 import com.alex.chat.server.model.User
 import com.alex.chat.server.service.GroupService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.io.PrintWriter
+import java.io.InputStream
+import java.io.OutputStream
 import java.net.ServerSocket
 import java.net.Socket
 
@@ -31,38 +32,44 @@ class ChatServer(
 
     private suspend fun handleConnection(socket: Socket) = coroutineScope {
         val inputStream = socket.getInputStream()
-        val reader = BufferedReader(InputStreamReader(inputStream))
         val outputStream = socket.getOutputStream()
-        val writer = PrintWriter(outputStream)
 
-        val user = authorizeUser(reader)
+        val user = authorizeUser(inputStream)
         launch {
             log.info("Running new message receiver for user ${user.name} of group ${user.group.name}")
-            runReceiver(reader, user)
+            runReceiver(inputStream, user)
         }
         launch {
             log.info("Running new message sender for user ${user.name} of group ${user.group.name}")
-            runSender(writer, user)
+            runSender(outputStream, user)
         }
     }
 
-    private suspend fun authorizeUser(reader: BufferedReader): User {
-        val userName = reader.readLine()
-        val groupName = reader.readLine()
+    private suspend fun authorizeUser(inputStream: InputStream): User {
+        val reader = inputStream.bufferedReader()
+        val userName = withContext(Dispatchers.IO) {
+            reader.readLine()
+        }
+        val groupName = withContext(Dispatchers.IO) {
+            reader.readLine()
+        }
         return groupService.addUserToGroup(userName, groupName)
     }
 
-    private suspend fun runReceiver(reader: BufferedReader, user: User) = coroutineScope {
+    private suspend fun runReceiver(inputStream: InputStream, user: User) = coroutineScope {
+        val reader = inputStream.bufferedReader()
         while (true) {
             val input = reader.readLine() ?: break
             user.sendMessageToGroup(input)
         }
     }
 
-    private suspend fun runSender(writer: PrintWriter, user: User) = coroutineScope {
+    private suspend fun runSender(outputStream: OutputStream, user: User) = coroutineScope {
+        val writer = outputStream.bufferedWriter()
         while (true) {
             val message = user.pollMessage()
-            writer.println(message)
+            writer.append(message.toString())
+            writer.newLine()
             writer.flush()
         }
     }
