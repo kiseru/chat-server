@@ -1,6 +1,8 @@
 package com.alex.chat.server.model
 
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.consumeAsFlow
 
 class User(
     val name: String,
@@ -13,9 +15,8 @@ class User(
         channel.send(message)
     }
 
-    suspend fun pollMessage(): Message {
-        return channel.receive()
-    }
+    fun messages(): Flow<Message> =
+        channel.consumeAsFlow()
 
     suspend fun logJoiningToGroup(groupName: String) {
         val text = "$name добавился в группу $groupName"
