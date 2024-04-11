@@ -4,6 +4,7 @@ import com.alex.chat.server.model.User
 import com.alex.chat.server.service.GroupService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -58,13 +59,15 @@ class ChatServer(
         return groupService.addUserToGroup(userName, groupName)
     }
 
-    private suspend fun runReceiver(inputStream: InputStream, user: User) = coroutineScope {
-        val reader = inputStream.bufferedReader()
-        while (true) {
-            val input = reader.readLine() ?: break
-            user.sendMessageToGroup(input)
+    private suspend fun runReceiver(inputStream: InputStream, user: User): Unit =
+        channelFlow<String> {
+            val reader = inputStream.bufferedReader()
+            while (true) {
+                send(reader.readLine())
+            }
         }
-    }
+            .flowOn(Dispatchers.IO)
+            .collect { user.sendMessageToGroup(it) }
 
     private suspend fun runSender(outputStream: OutputStream, user: User) {
         val writer = outputStream.bufferedWriter()

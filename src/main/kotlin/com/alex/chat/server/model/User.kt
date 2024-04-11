@@ -1,22 +1,22 @@
 package com.alex.chat.server.model
 
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 
 class User(
     val name: String,
     val group: Group,
 ) {
 
-    private val channel = Channel<Message>(Channel.BUFFERED)
+    private val messages = MutableSharedFlow<Message>(1, 1, BufferOverflow.DROP_OLDEST)
 
     suspend fun sendMessage(message: Message) {
-        channel.send(message)
+        messages.emit(message)
     }
 
     fun messages(): Flow<Message> =
-        channel.consumeAsFlow()
+        messages
 
     suspend fun logJoiningToGroup(groupName: String) {
         val text = "$name добавился в группу $groupName"
