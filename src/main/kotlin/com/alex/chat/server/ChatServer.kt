@@ -4,6 +4,8 @@ import com.alex.chat.server.model.User
 import com.alex.chat.server.service.GroupService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.slf4j.Logger
@@ -64,14 +66,16 @@ class ChatServer(
         }
     }
 
-    private suspend fun runSender(outputStream: OutputStream, user: User) = coroutineScope {
+    private suspend fun runSender(outputStream: OutputStream, user: User) {
         val writer = outputStream.bufferedWriter()
-        while (true) {
-            val message = user.pollMessage()
-            writer.append(message.toString())
-            writer.newLine()
-            writer.flush()
-        }
+        user.messages()
+            .onEach {
+                writer.append(it.toString())
+                writer.newLine()
+                writer.flush()
+            }
+            .flowOn(Dispatchers.IO)
+            .collect {}
     }
 
     companion object {
