@@ -7,5 +7,5 @@ import org.springframework.stereotype.Component
 
 @Component
 class UserServiceImpl : UserService {
-    override fun create(name: String, group: Group) = User(name, group)
+    override fun create(name: String, group: Group) = User(name)
 }

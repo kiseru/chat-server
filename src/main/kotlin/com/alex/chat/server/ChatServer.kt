@@ -1,9 +1,13 @@
 package com.alex.chat.server
 
+import com.alex.chat.server.model.Group
+import com.alex.chat.server.model.Message
 import com.alex.chat.server.model.User
 import com.alex.chat.server.service.GroupService
+import com.alex.chat.server.service.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
@@ -16,10 +20,12 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.net.ServerSocket
 import java.net.Socket
+import java.net.SocketException
 
 @Component
 class ChatServer(
     private val groupService: GroupService,
+    private val userService: UserService,
 ) {
 
     suspend fun run() = coroutineScope {
@@ -34,21 +40,29 @@ class ChatServer(
     }
 
     private suspend fun handleConnection(socket: Socket) = coroutineScope {
-        val inputStream = socket.getInputStream()
-        val outputStream = socket.getOutputStream()
+        try {
+            val inputStream = socket.getInputStream()
+            val outputStream = socket.getOutputStream()
 
-        val user = authorizeUser(inputStream)
-        launch {
-            log.info("Running new message receiver for user ${user.name} of group ${user.group.name}")
-            runReceiver(inputStream, user)
-        }
-        launch {
-            log.info("Running new message sender for user ${user.name} of group ${user.group.name}")
-            runSender(outputStream, user)
+            val (username, groupName) = getUserAuthorities(inputStream)
+            val group = groupService.findByGroupName(groupName) ?: groupService.create(groupName)
+            val user = userService.create(username, group)
+            group.addUser(user)
+            logJoiningToGroup(user, group)
+            launch {
+                log.info("Running new message receiver for user ${user.name} of group ${group.name}")
+                runReceiver(inputStream, user, group)
+            }
+            launch {
+                log.info("Running new message sender for user ${user.name} of group ${group.name}")
+                runSender(outputStream, user)
+            }
+        } catch (e: SocketException) {
+            log.error("Failed to connect to server", e)
         }
     }
 
-    private suspend fun authorizeUser(inputStream: InputStream): User {
+    private suspend fun getUserAuthorities(inputStream: InputStream): Authorities {
         val reader = inputStream.bufferedReader()
         val userName = withContext(Dispatchers.IO) {
             reader.readLine()
@@ -56,10 +70,16 @@ class ChatServer(
         val groupName = withContext(Dispatchers.IO) {
             reader.readLine()
         }
-        return groupService.addUserToGroup(userName, groupName)
+        return Authorities(userName, groupName)
     }
 
-    private suspend fun runReceiver(inputStream: InputStream, user: User): Unit =
+    private suspend fun logJoiningToGroup(user: User, group: Group) {
+        val text = "${user.name} добавился в группу ${group.name}"
+        val message = Message(text)
+        sendMessageToGroup(group, message)
+    }
+
+    private suspend fun runReceiver(inputStream: InputStream, user: User, group: Group): Unit =
         channelFlow<String> {
             val reader = inputStream.bufferedReader()
             while (true) {
@@ -67,7 +87,16 @@ class ChatServer(
             }
         }
             .flowOn(Dispatchers.IO)
-            .collect { user.sendMessageToGroup(it) }
+            .collect {
+                val message = Message(user.name, it)
+                sendMessageToGroup(group, message)
+            }
+
+    suspend fun sendMessageToGroup(group: Group, message: Message) =
+        group.getUsers().asFlow()
+            .collect {
+                it.sendMessage(message)
+            }
 
     private suspend fun runSender(outputStream: OutputStream, user: User) {
         val writer = outputStream.bufferedWriter()
@@ -84,4 +113,6 @@ class ChatServer(
     companion object {
         private val log: Logger = LoggerFactory.getLogger(ChatServer::class.java)
     }
+
+    private data class Authorities(val username: String, val groupName: String)
 }

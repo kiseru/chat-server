@@ -1,23 +1,20 @@
 package com.alex.chat.server.model
 
-import kotlinx.coroutines.flow.asFlow
-import java.util.concurrent.CopyOnWriteArraySet
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class Group(
     val name: String,
 ) {
 
-    private val users = CopyOnWriteArraySet<User>()
+    private val mutex = Mutex()
+    private val users = mutableListOf<User>()
 
-    suspend fun addUser(user: User) {
-        users.add(user)
-        user.logJoiningToGroup(name)
-    }
+    suspend fun addUser(user: User) =
+        mutex.withLock {
+            users.add(user)
+        }
 
-    suspend fun sendMessage(message: Message) {
-        users.asFlow()
-            .collect {
-                it.sendMessage(message)
-            }
-    }
+    suspend fun getUsers(): List<User> =
+        mutex.withLock { users.toList() }
 }

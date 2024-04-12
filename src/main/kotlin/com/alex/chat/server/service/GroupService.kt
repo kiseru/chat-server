@@ -1,8 +1,10 @@
 package com.alex.chat.server.service
 
-import com.alex.chat.server.model.User
+import com.alex.chat.server.model.Group
 
 interface GroupService {
 
-    suspend fun addUserToGroup(userName: String, groupName: String): User
+    suspend fun create(groupName: String): Group
+
+    suspend fun findByGroupName(groupName: String): Group?
 }
