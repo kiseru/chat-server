@@ -7,10 +7,7 @@ import com.alex.chat.server.service.GroupService
 import com.alex.chat.server.service.UserService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.slf4j.Logger
@@ -86,7 +83,12 @@ class ChatServer(
                 send(reader.readLine())
             }
         }
+            .catch {
+                log.error("Error during receiving message", it)
+                user.stopMessaging()
+            }
             .flowOn(Dispatchers.IO)
+            .onCompletion { log.info("Completed receiving messages from user ${user.name} in group ${group.name}") }
             .collect {
                 val message = Message(user.name, it)
                 sendMessageToGroup(group, message)
@@ -101,6 +103,7 @@ class ChatServer(
     private suspend fun runSender(outputStream: OutputStream, user: User) {
         val writer = outputStream.bufferedWriter()
         user.messages()
+            .onCompletion { log.info("Completed sending message to user ${user.name}") }
             .onEach {
                 writer.append(it.toString())
                 writer.newLine()
