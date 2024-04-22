@@ -25,19 +25,25 @@ class ChatServer(
     private val userService: UserService,
 ) {
 
-    suspend fun run() = coroutineScope {
-        val server = ServerSocket(5003)
-        while (!server.isClosed) {
-            val socket = server.accept()
-            launch {
-                log.info("Accepting new connection")
-                handleConnection(socket)
+    suspend fun run() =
+        newConnections()
+            .onEach { handleConnection(it) }
+            .flowOn(Dispatchers.IO)
+            .collect {}
+
+    private fun newConnections(): Flow<Socket> =
+        channelFlow {
+            val server = ServerSocket(5003)
+            while (!server.isClosed) {
+                val socket = server.accept()
+                send(socket)
             }
         }
-    }
+            .flowOn(Dispatchers.IO)
 
     private suspend fun handleConnection(socket: Socket) = coroutineScope {
         try {
+            log.info("Accepting new connection")
             val inputStream = socket.getInputStream()
             val outputStream = socket.getOutputStream()
 
