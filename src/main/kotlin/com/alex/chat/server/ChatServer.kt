@@ -25,11 +25,15 @@ class ChatServer(
     private val userService: UserService,
 ) {
 
-    suspend fun run() =
+    suspend fun run() = coroutineScope {
         newConnections()
-            .onEach { handleConnection(it) }
             .flowOn(Dispatchers.IO)
-            .collect {}
+            .collect {
+                launch(Dispatchers.IO) {
+                    handleConnection(it)
+                }
+            }
+    }
 
     private fun newConnections(): Flow<Socket> =
         channelFlow {
